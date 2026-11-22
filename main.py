@@ -32,3 +32,10 @@ assert not TEXT.endswith("\n"), "text must not end with a trailing newline"
 os.makedirs("/output", exist_ok=True)
 with open("/output/entry.txt", "w", encoding="utf-8") as f:
     f.write(TEXT)
+
+# Verify the write: read it back and fail loudly on any mismatch, so a
+# truncated or re-encoded file can never be graded as the entry.
+with open("/output/entry.txt", "r", encoding="utf-8") as f:
+    written = f.read()
+assert written == TEXT, "entry.txt on disk does not match TEXT"
+assert len(written) == 278, f"expected exactly 278 code points, got {len(written)}"
